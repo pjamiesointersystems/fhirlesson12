@@ -1,0 +1,33 @@
+@if (!identifier) {
+  <p class="text-gray-500 italic">Select a patient to generate observations</p>
+} @else {
+  <div class="flex flex-wrap gap-2 items-end mb-3">
+    <button mat-raised-button color="primary" (click)="generateFromFile()" [disabled]="loading">
+      Generate from File
+    </button>
+
+    <mat-form-field class="w-24" appearance="outline">
+      <mat-label>Count</mat-label>
+      <input matInput type="number" [(ngModel)]="syntheticCount" min="1" max="1000" />
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" (click)="generateSynthetic()" [disabled]="loading">
+      Generate Synthetic
+    </button>
+  </div>
+
+  @if (observationCount !== null) {
+    <p class="mb-2 font-semibold text-indigo-700">Observations generated: {{ observationCount }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="mb-2 text-red-600">{{ errorMessage }}</p>
+  }
+
+  @for (obs of sampleObservations; track $index) {
+    <div class="mb-2">
+      <p class="text-xs text-gray-500 mb-1">Sample observation {{ $index + 1 }}</p>
+      <app-json-viewer [jsonData]="obs"></app-json-viewer>
+    </div>
+  }
+}

@@ -1,0 +1,5 @@
+::ng-deep .json-key { color: #881391; }
+::ng-deep .json-string { color: #1a1aa6; }
+::ng-deep .json-number { color: #1c00cf; }
+::ng-deep .json-boolean { color: #0000ff; }
+::ng-deep .json-null { color: #808080; }

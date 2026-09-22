@@ -1,0 +1,26 @@
+@if (errorMessage) {
+  <p class="text-red-600">{{ errorMessage }}</p>
+} @else if (patients.length === 0) {
+  <p class="text-gray-500 italic">No patients available</p>
+} @else {
+  <table mat-table [dataSource]="patients" class="w-full">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let patient">{{ patient.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="identifier">
+      <th mat-header-cell *matHeaderCellDef>Identifier</th>
+      <td mat-cell *matCellDef="let patient">{{ patient.identifier }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="selectPatient(row.identifier)"
+      [class.selected-row]="row.identifier === selectedIdentifier"
+      class="cursor-pointer hover:bg-indigo-50"
+    ></tr>
+  </table>
+}

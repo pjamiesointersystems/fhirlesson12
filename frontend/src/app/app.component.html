@@ -1,0 +1,43 @@
+<mat-toolbar color="primary">
+  FHIR Training Demo
+</mat-toolbar>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Patients</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-patient-list (patientSelected)="onPatientSelected($event)"></app-patient-list>
+      <hr class="my-3 border-gray-300" />
+      <app-patient-detail [identifier]="selectedPatientIdentifier"></app-patient-detail>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Observations</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-observation-panel [identifier]="selectedPatientIdentifier" (observationCountChange)="onObservationCountChange($event)"></app-observation-panel>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Bundle</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-bundle-panel [identifier]="selectedPatientIdentifier" [observationCount]="observationCount" (bundlePosted)="onBundlePosted($event)" (postFailed)="onPostFailed($event)"></app-bundle-panel>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Results</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-results-panel [postResult]="postResult" [errorResult]="postError"></app-results-panel>
+    </mat-card-content>
+  </mat-card>
+</div>
