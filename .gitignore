@@ -4,6 +4,8 @@
 *.pyc
 fhirclient/lib/python3.10/site-packages/
 __pycache__/
+fhir-app-env/
+.venv/
 *.pyi
 *.so
 /__quot*.py
