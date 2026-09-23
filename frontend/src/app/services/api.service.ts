@@ -31,14 +31,6 @@ export class ApiService {
     });
   }
 
-  generateSynthetic(sessionId: string, identifier: string, count: number): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>('/api/observations/synthetic', {
-      session_id: sessionId,
-      identifier,
-      count,
-    });
-  }
-
   buildBundle(sessionId: string, identifier: string): Observable<ApiResponse> {
     return this.http.post<ApiResponse>('/api/bundles/build', {
       session_id: sessionId,

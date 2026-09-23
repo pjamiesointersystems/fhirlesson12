@@ -11,7 +11,7 @@ describe('ObservationPanelComponent', () => {
   let mockApi: jasmine.SpyObj<ApiService>;
 
   beforeEach(async () => {
-    mockApi = jasmine.createSpyObj('ApiService', ['generateFromFile', 'generateSynthetic']);
+    mockApi = jasmine.createSpyObj('ApiService', ['generateFromFile']);
 
     await TestBed.configureTestingModule({
       imports: [ObservationPanelComponent],
@@ -37,26 +37,24 @@ describe('ObservationPanelComponent', () => {
     expect(el.textContent).toContain('Select a patient to generate observations');
   });
 
-  it('should call generateFromFile on button click', () => {
+  it('should call generateFromFile and populate raw and FHIR data', () => {
     mockApi.generateFromFile.and.returnValue(
-      of({ success: true, data: { count: 100, sample_observations: [{}, {}] }, message: 'ok' })
+      of({
+        success: true,
+        data: {
+          count: 100,
+          sample_raw: [{ heart_rate: 72, datetime: '2025-01-01T10:00:00' }],
+          sample_observations: [{}],
+        },
+        message: 'ok',
+      })
     );
     component.identifier = '111-222-3333';
     fixture.detectChanges();
     component.generateFromFile();
     expect(mockApi.generateFromFile).toHaveBeenCalled();
     expect(component.observationCount).toBe(100);
-    expect(component.sampleObservations.length).toBe(2);
-  });
-
-  it('should clamp synthetic count', () => {
-    mockApi.generateSynthetic.and.returnValue(
-      of({ success: true, data: { count: 1000, sample_observations: [] }, message: 'ok' })
-    );
-    component.identifier = '111-222-3333';
-    component.syntheticCount = 9999;
-    fixture.detectChanges();
-    component.generateSynthetic();
-    expect(component.syntheticCount).toBe(1000);
+    expect(component.sampleRaw.length).toBe(1);
+    expect(component.sampleObservations.length).toBe(1);
   });
 });

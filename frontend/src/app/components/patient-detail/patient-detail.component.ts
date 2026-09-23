@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { JsonViewerComponent } from '../json-viewer/json-viewer.component';
 import { ApiService } from '../../services/api.service';
@@ -13,6 +13,7 @@ import { SessionService } from '../../services/session.service';
 })
 export class PatientDetailComponent implements OnChanges {
   @Input() identifier: string | null = null;
+  @Output() patientPosted = new EventEmitter<string>();
 
   patientResource: any = null;
   fhirId: string | null = null;
@@ -64,6 +65,7 @@ export class PatientDetailComponent implements OnChanges {
         if (res.success) {
           this.fhirId = res.data.fhir_id;
           this.successMessage = res.message ?? 'Patient posted successfully';
+          this.patientPosted.emit(this.identifier!);
         } else {
           this.errorMessage = res.error?.message ?? 'Failed to post patient';
         }

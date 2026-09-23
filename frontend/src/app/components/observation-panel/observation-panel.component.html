@@ -1,18 +1,9 @@
 @if (!identifier) {
   <p class="text-gray-500 italic">Select a patient to generate observations</p>
 } @else {
-  <div class="flex flex-wrap gap-2 items-end mb-3">
+  <div class="mb-3">
     <button mat-raised-button color="primary" (click)="generateFromFile()" [disabled]="loading">
-      Generate from File
-    </button>
-
-    <mat-form-field class="w-24" appearance="outline">
-      <mat-label>Count</mat-label>
-      <input matInput type="number" [(ngModel)]="syntheticCount" min="1" max="1000" />
-    </mat-form-field>
-
-    <button mat-raised-button color="accent" (click)="generateSynthetic()" [disabled]="loading">
-      Generate Synthetic
+      {{ loading ? 'Generating...' : 'Generate from File' }}
     </button>
   </div>
 
@@ -24,10 +15,40 @@
     <p class="mb-2 text-red-600">{{ errorMessage }}</p>
   }
 
-  @for (obs of sampleObservations; track $index) {
-    <div class="mb-2">
-      <p class="text-xs text-gray-500 mb-1">Sample observation {{ $index + 1 }}</p>
-      <app-json-viewer [jsonData]="obs"></app-json-viewer>
+  @if (sampleRaw.length > 0) {
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <h4 class="text-sm font-semibold text-gray-700 mb-1">Raw Data</h4>
+        <div class="border rounded p-2 bg-gray-50 max-h-72 overflow-y-auto">
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="border-b">
+                <th class="text-left py-1 px-1">Heart Rate</th>
+                <th class="text-left py-1 px-1">Date/Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of sampleRaw; track $index) {
+                <tr class="border-b border-gray-200">
+                  <td class="py-1 px-1 font-mono">{{ row.heart_rate }} bpm</td>
+                  <td class="py-1 px-1 font-mono">{{ row.datetime }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-semibold text-gray-700 mb-1">FHIR Observations</h4>
+        <div class="max-h-72 overflow-y-auto">
+          @for (obs of sampleObservations; track $index) {
+            <div class="mb-2">
+              <app-json-viewer [jsonData]="obs"></app-json-viewer>
+            </div>
+          }
+        </div>
+      </div>
     </div>
   }
 }

@@ -1,20 +1,22 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 import { Patient } from '../../models/patient.model';
 
 @Component({
   selector: 'app-patient-list',
   standalone: true,
-  imports: [MatTableModule],
+  imports: [MatTableModule, MatIconModule],
   templateUrl: './patient-list.component.html',
   styleUrl: './patient-list.component.css',
 })
 export class PatientListComponent implements OnInit {
+  @Input() postedIdentifiers: Set<string> = new Set();
   @Output() patientSelected = new EventEmitter<string>();
 
   patients: Patient[] = [];
-  displayedColumns = ['name', 'identifier'];
+  displayedColumns = ['name', 'identifier', 'posted'];
   selectedIdentifier: string | null = null;
   errorMessage: string | null = null;
 

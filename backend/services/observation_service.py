@@ -37,6 +37,7 @@ class ObservationService:
                 file_name,
             )
 
+        raw_tuples = []
         observations = []
         with open(file_path, "r") as f:
             for line in f:
@@ -45,6 +46,7 @@ class ObservationService:
                     continue
                 tup = ast.literal_eval(line)
                 heart_rate_value, effective_date_str = tup
+                raw_tuples.append({"heart_rate": heart_rate_value, "datetime": effective_date_str})
                 effective_dt = datetime.fromisoformat(effective_date_str)
                 obs = HeartRateObservation(
                     identifier, heart_rate_value, effective_dt=effective_dt
@@ -55,11 +57,13 @@ class ObservationService:
         session = state.get_or_create_session(session_id)
         session.observations[identifier] = observations
 
-        # Build response
-        sample = [obs.dict() for obs in observations[:2]]
+        # Build response with raw data and FHIR samples
+        sample_raw = raw_tuples[:5]
+        sample_fhir = [obs.dict() for obs in observations[:5]]
         return {
             "count": len(observations),
-            "sample_observations": sample,
+            "sample_raw": sample_raw,
+            "sample_observations": sample_fhir,
         }
 
     def generate_synthetic(
